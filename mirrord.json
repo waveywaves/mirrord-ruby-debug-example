@@ -1,0 +1,13 @@
+{
+  "target": "deployment/ruby-app",
+  "feature": {
+    "env": true,
+    "fs": {
+      "mapping": {
+        "/Library/Ruby/Gems/2.6.0/gems/": "/usr/local/bundle/gems",
+        "/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/lib": "/usr/local/lib"
+      }
+    },
+    "network": true
+  }
+}
