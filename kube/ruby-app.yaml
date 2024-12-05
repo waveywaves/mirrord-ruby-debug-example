@@ -14,12 +14,14 @@ spec:
     spec:
       containers:
       - name: ruby-app
-        image: docker.io/waveywaves/mirrord-ruby-example:v6
+        image: docker.io/waveywaves/mirrord-ruby-example:v7
         ports:
         - containerPort: 4567
         env:
-        - name: REDIS_URL
-          value: redis://redis-service
+        - name: REDIS_HOST
+          value: redis
+        - name: REDIS_PORT
+          value: "6379"
 ---
 apiVersion: v1
 kind: Service

@@ -2,17 +2,6 @@
   "target": "deployment/ruby-app",
   "feature": {
     "env": true,
-    "fs": {
-      "mapping": {
-        "/Library/Ruby/Gems/[0-9]+\\.[0-9]+\\.[0-9]+": "/usr/local/bundle",
-        "/System/Library/Frameworks/Ruby.framework/Versions/[0-9]+\\.[0-9]+/usr/lib": "/usr/local/lib",
-        "/System/Library/Frameworks/Ruby.framework/Versions/[0-9]+\\.[0-9]+/usr/lib/ruby/[0-9]+\\.[0-9]+\\.[0-9]+/universal-darwin[0-9]+/rubygems.rb": "/usr/local/lib/ruby/3.2.0/rubygems.rb",
-        "/System/Library/Frameworks/Ruby.framework/Versions/[0-9]+\\.[0-9]+/usr/lib/ruby/[0-9]+\\.[0-9]+\\.[0-9]+/rubygems.rb": "/usr/local/lib/ruby/3.2.0/rubygems.rb",
-        "/System/Library/Frameworks/Ruby.framework/Versions/[0-9]+\\.[0-9]+/usr/lib/ruby/[0-9]+\\.[0-9]+\\.[0-9]+/universal-darwin[0-9]+/rubygems": "/usr/local/lib/ruby/3.2.0/rubygems",
-        "/System/Library/Frameworks/Ruby.framework/Versions/[0-9]+\\.[0-9]+/usr/lib/ruby/[0-9]+\\.[0-9]+\\.[0-9]+/universal-darwin[0-9]+": "/usr/local/lib/ruby/3.2.0",
-        "/System/Library/Frameworks/Ruby.framework/Versions/[0-9]+\\.[0-9]+/usr/lib/ruby/[0-9]+\\.[0-9]+\\.[0-9]+": "/usr/local/lib/ruby/3.2.0"
-      }
-    },
     "network": true
   }
 }
