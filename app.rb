@@ -77,7 +77,6 @@ def parse_post_data(request)
   end
   params
 end
-
 # HTTP Server
 server = TCPServer.new('0.0.0.0', 4567)
 puts "Mirrord guestbook server started at http://0.0.0.0:4567"
@@ -94,26 +93,138 @@ while session = server.accept
 
   method, path = request.split(' ')
 
-  if method == 'GET' && path == '/'
+  if method == 'GET' && path.start_with?('/images/')
+    image_path = path[1..-1]  # Remove leading slash
+    if File.exist?(image_path) && path.end_with?('.svg')
+      content = File.read(image_path)
+      session.print "HTTP/1.1 200 OK\r\n"
+      session.print "Content-Type: image/svg+xml\r\n"
+      session.print "Content-Length: #{content.length}\r\n"
+      session.print "\r\n"
+      session.print content
+    else
+      session.print "HTTP/1.1 404 Not Found\r\n\r\n"
+    end
+  elsif method == 'GET' && path == '/'
     visits = redis.incr('visits')
     entries = redis.lrange('guestbook', 0, 9) || []
     
     content = <<-HTML
       <html>
         <head>
-          <title>Mirrord + Ruby Guestbook</title>
+          <title>mirrord Guestbook</title>
           <style>
-            body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
-            .entry { border: 1px solid #ddd; margin: 10px 0; padding: 10px; border-radius: 5px; }
-            .timestamp { color: #666; font-size: 0.8em; }
-            form { margin: 20px 0; }
-            textarea { width: 100%; height: 100px; margin: 10px 0; }
-            button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; }
+            :root {
+              --primary-color: #2563eb;
+              --secondary-color: #1e40af;
+              --background-color: #f8fafc;
+              --border-color: #e2e8f0;
+            }
+            
+            body { 
+              font-family: 'Inter', system-ui, -apple-system, sans-serif;
+              max-width: 800px; 
+              margin: 0 auto; 
+              padding: 20px;
+              background-color: var(--background-color);
+              line-height: 1.6;
+            }
+            
+            h1, h2 {
+              color: #1e293b;
+              text-align: center;
+            }
+            
+            .entry { 
+              background: white;
+              border: 1px solid var(--border-color);
+              margin: 16px 0; 
+              padding: 16px;
+              border-radius: 8px;
+              box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+              transition: transform 0.2s ease;
+            }
+            
+            .entry:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            }
+            
+            .timestamp { 
+              color: #64748b; 
+              font-size: 0.875rem;
+              margin-top: 8px;
+            }
+            
+            form { 
+              background: white;
+              padding: 24px;
+              border-radius: 8px;
+              box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+              margin: 24px 0;
+            }
+            
+            input, textarea { 
+              width: 100%;
+              padding: 8px 12px;
+              margin: 8px 0 16px;
+              border: 1px solid var(--border-color);
+              border-radius: 6px;
+              font-size: 1rem;
+            }
+            
+            textarea { 
+              height: 120px;
+              resize: vertical;
+            }
+            
+            button { 
+              padding: 12px 24px;
+              background: var(--primary-color);
+              color: white;
+              border: none;
+              border-radius: 6px;
+              font-size: 1rem;
+              font-weight: 500;
+              cursor: pointer;
+              transition: background-color 0.2s ease;
+            }
+            
+            button:hover {
+              background: var(--secondary-color);
+            }
+            
+            .logo-container { 
+              display: flex; 
+              justify-content: center; 
+              gap: 20px; 
+              margin: 32px 0;
+            }
+            
+            .logo-container img { 
+              width: 180px;
+              height: auto;
+              transition: transform 0.2s ease;
+            }
+            
+            .logo-container img:hover {
+              transform: scale(1.05);
+            }
+            
+            .visits-counter {
+              text-align: center;
+              color: #64748b;
+              font-size: 0.875rem;
+              margin-bottom: 24px;
+            }
           </style>
         </head>
         <body>
-          <h1>Welcome to the Ruby Guestbook!</h1>
-          <p>Total visits: #{visits}</p>
+          <div class="logo-container">
+            <img src="/images/mirrord.svg" alt="mirrord Logo"/>
+          </div>
+          <h1>Welcome to the mirrord Guestbook!</h1>
+          <div class="visits-counter">Total visits: #{visits}</div>
           
           <form method="POST" action="/">
             <div>
